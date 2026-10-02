@@ -14,6 +14,9 @@ ts-node-dev: ejecuta TypeScript y reinicia el servidor al guardar.
 
 ## Uso de asistentes de IA
 (Una entrada por cada uso significativo. Ver abajo)
+me ayudo a crear el repositorio y conectarlo de manera precisa por que hace mucho no usaba git y tampoco github, cometi errores de codificacion y ortografia y me ayude con la IA claude para corregirlos, un ejemplo: escribí git log --online cuando en realidad era git log --oneline.
+
+
 
 ## Retos y soluciones
 (Errores que tuviste y cómo los resolviste)
