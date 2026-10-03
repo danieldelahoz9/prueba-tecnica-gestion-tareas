@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registrarUsuario } from "../services/auth.service";
+import { registrarUsuario, iniciarSesion } from "../services/auth.service";
 
 // Controlador del endpoint POST /auth/register
 export async function register(req: Request, res: Response) {
@@ -25,5 +25,24 @@ export async function register(req: Request, res: Response) {
     });
   } catch (error) {
     res.status(400).json({ mensaje: "No se pudo registrar el usuario" });
+  }
+  }
+// Controlador del endpoint POST /auth/login
+export async function login(req: Request, res: Response) {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // Validación simple: reviso que no falte ningún dato
+  if (!email || !password) {
+    res.status(400).json({ mensaje: "Faltan datos: email y password" });
+    return;
+  }
+
+  try {
+    const token = await iniciarSesion(email, password);
+    res.status(200).json({ token: token });
+  } catch (error) {
+    // 401 significa "no autorizado"
+    res.status(401).json({ mensaje: "Credenciales incorrectas" });
   }
 }
