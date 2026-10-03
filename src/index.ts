@@ -1,3 +1,4 @@
+import taskRoutes from "./api/task.routes";
 import authRoutes from "./api/auth.routes";
 import express from "express";
 import config from "./config/config";
@@ -11,6 +12,8 @@ app.use(express.json());
 
 //esto conecta la ruta 
 app.use("/auth", authRoutes);
+
+app.use("/tasks", taskRoutes);
 
 // Ruta de prueba para comprobar que el servidor funciona
 app.get("/health", (req, res) => {
