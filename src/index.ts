@@ -1,3 +1,4 @@
+import authRoutes from "./api/auth.routes";
 import express from "express";
 import config from "./config/config";
 import { conectarBaseDeDatos } from "./config/database";
@@ -7,6 +8,9 @@ const app = express();
 
 // Esto permite que el servidor entienda JSON en las peticiones
 app.use(express.json());
+
+//esto conecta la ruta 
+app.use("/auth", authRoutes);
 
 // Ruta de prueba para comprobar que el servidor funciona
 app.get("/health", (req, res) => {
