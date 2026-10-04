@@ -1,6 +1,14 @@
 import { Response } from "express";
 import { RequestConUsuario } from "../utils/types";
-import { crearTarea, listarTareas } from "../services/task.service";
+import mongoose from "mongoose";
+import { EstadoTarea } from "../persistence/task.model";
+import {
+  crearTarea,
+  listarTareas,
+  obtenerTarea,
+  actualizarTarea,
+  eliminarTarea,
+} from "../services/task.service";
 
 // Controlador del endpoint POST /tasks
 export async function crear(req: RequestConUsuario, res: Response) {
@@ -57,3 +65,127 @@ export async function listar(req: RequestConUsuario, res: Response) {
     res.status(500).json({ mensaje: "No se pudieron obtener las tareas" });
   }
 }
+
+// Controlador del endpoint GET /tasks/:id
+export async function obtener(req: RequestConUsuario, res: Response) {
+  const usuarioId = req.usuarioId;
+  const tareaId = String(req.params.id);
+
+  if (!usuarioId) {
+    res.status(401).json({ mensaje: "No autenticado" });
+    return;
+  }
+
+  // Reviso que el id tenga formato de id de MongoDB
+  if (!mongoose.isValidObjectId(tareaId)) {
+    res.status(400).json({ mensaje: "El id de la tarea no es válido" });
+    return;
+  }
+
+  try {
+    const tarea = await obtenerTarea(usuarioId, tareaId);
+
+    // Si no existe o no es del usuario, respondo 404
+    if (!tarea) {
+      res.status(404).json({ mensaje: "Tarea no encontrada" });
+      return;
+    }
+
+    res.status(200).json(tarea);
+  } catch (error) {
+    res.status(500).json({ mensaje: "No se pudo obtener la tarea" });
+  }
+}
+
+// Controlador del endpoint PUT /tasks/:id
+export async function actualizar(req: RequestConUsuario, res: Response) {
+  const usuarioId = req.usuarioId;
+  const tareaId = String(req.params.id);
+
+  if (!usuarioId) {
+    res.status(401).json({ mensaje: "No autenticado" });
+    return;
+  }
+
+  if (!mongoose.isValidObjectId(tareaId)) {
+    res.status(400).json({ mensaje: "El id de la tarea no es válido" });
+    return;
+  }
+
+  // Aquí voy armando solo los campos que el usuario sí envió
+  const datos: {
+    titulo?: string;
+    descripcion?: string;
+    fecha_vencimiento?: Date;
+    estado?: EstadoTarea;
+  } = {};
+
+  if (req.body.titulo) {
+    datos.titulo = req.body.titulo;
+  }
+
+  if (req.body.descripcion !== undefined) {
+    datos.descripcion = req.body.descripcion;
+  }
+
+  if (req.body.fecha_vencimiento) {
+    const fecha = new Date(req.body.fecha_vencimiento);
+    if (isNaN(fecha.getTime())) {
+      res.status(400).json({ mensaje: "La fecha_vencimiento no es válida" });
+      return;
+    }
+    datos.fecha_vencimiento = fecha;
+  }
+
+  if (req.body.estado) {
+    const estado = req.body.estado;
+    if (estado !== "pendiente" && estado !== "en curso" && estado !== "completada") {
+      res.status(400).json({ mensaje: "Estado no válido" });
+      return;
+    }
+    datos.estado = estado;
+  }
+
+  try {
+    const tarea = await actualizarTarea(usuarioId, tareaId, datos);
+
+    if (!tarea) {
+      res.status(404).json({ mensaje: "Tarea no encontrada" });
+      return;
+    }
+
+    res.status(200).json(tarea);
+  } catch (error) {
+    res.status(500).json({ mensaje: "No se pudo actualizar la tarea" });
+  }
+}
+
+// Controlador del endpoint DELETE /tasks/:id
+export async function eliminar(req: RequestConUsuario, res: Response) {
+  const usuarioId = req.usuarioId;
+  const tareaId = String(req.params.id);
+
+  if (!usuarioId) {
+    res.status(401).json({ mensaje: "No autenticado" });
+    return;
+  }
+
+  if (!mongoose.isValidObjectId(tareaId)) {
+    res.status(400).json({ mensaje: "El id de la tarea no es válido" });
+    return;
+  }
+
+  try {
+    const tarea = await eliminarTarea(usuarioId, tareaId);
+
+    if (!tarea) {
+      res.status(404).json({ mensaje: "Tarea no encontrada" });
+      return;
+    }
+
+    res.status(200).json({ mensaje: "Tarea eliminada" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "No se pudo eliminar la tarea" });
+  }
+}
+
