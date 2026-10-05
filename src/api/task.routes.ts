@@ -1,13 +1,17 @@
 import { Router } from "express";
 import { verificarToken } from "./auth.middleware";
-import { crear, listar, obtener, actualizar, eliminar } from "../controllers/task.controller";
+import { validarBody } from "./validar.middleware";
+import { esquemaCrearTarea, esquemaActualizarTarea } from "../utils/schemas";
+import {
+  crear, listar, obtener, actualizar, eliminar, } from "../controllers/task.controller";
+
 const router = Router();
 
 // Todas las rutas de tareas pasan primero por el middleware
 router.use(verificarToken);
 
 // POST /tasks
-router.post("/", crear);
+router.post("/", validarBody(esquemaCrearTarea), crear);
 
 // GET /tasks
 router.get("/", listar);
@@ -16,7 +20,7 @@ router.get("/", listar);
 router.get("/:id", obtener);
 
 // PUT /tasks/:id
-router.put("/:id", actualizar);
+router.put("/:id", validarBody(esquemaActualizarTarea), actualizar);
 
 // DELETE /tasks/:id
 router.delete("/:id", eliminar);
