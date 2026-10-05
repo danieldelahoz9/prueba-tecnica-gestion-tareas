@@ -1,3 +1,5 @@
+import { NextFunction } from "express";
+import { AuthenticationError, ValidationError, NotFoundError } from "../utils/errors";
 import { Response } from "express";
 import { RequestConUsuario } from "../utils/types";
 import mongoose from "mongoose";
@@ -67,33 +69,33 @@ export async function listar(req: RequestConUsuario, res: Response) {
 }
 
 // Controlador del endpoint GET /tasks/:id
-export async function obtener(req: RequestConUsuario, res: Response) {
-  const usuarioId = req.usuarioId;
-  const tareaId = String(req.params.id);
-
-  if (!usuarioId) {
-    res.status(401).json({ mensaje: "No autenticado" });
-    return;
-  }
-
-  // Reviso que el id tenga formato de id de MongoDB
-  if (!mongoose.isValidObjectId(tareaId)) {
-    res.status(400).json({ mensaje: "El id de la tarea no es válido" });
-    return;
-  }
-
+export async function obtener(
+  req: RequestConUsuario,
+  res: Response,
+  next: NextFunction
+) {
   try {
+    const usuarioId = req.usuarioId;
+    const tareaId = String(req.params.id);
+
+    if (!usuarioId) {
+      throw new AuthenticationError("No autenticado");
+    }
+
+    if (!mongoose.isValidObjectId(tareaId)) {
+      throw new ValidationError("El id de la tarea no es válido");
+    }
+
     const tarea = await obtenerTarea(usuarioId, tareaId);
 
-    // Si no existe o no es del usuario, respondo 404
     if (!tarea) {
-      res.status(404).json({ mensaje: "Tarea no encontrada" });
-      return;
+      throw new NotFoundError("Tarea no encontrada");
     }
 
     res.status(200).json(tarea);
   } catch (error) {
-    res.status(500).json({ mensaje: "No se pudo obtener la tarea" });
+    // Paso el error al manejador centralizado
+    next(error);
   }
 }
 
