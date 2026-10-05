@@ -1,4 +1,6 @@
-  import { manejarErrores } from "./api/error.middleware";
+import swaggerUi from "swagger-ui-express";
+import { especificacion } from "./config/swagger";
+import { manejarErrores } from "./api/error.middleware";
 import taskRoutes from "./api/task.routes";
 import authRoutes from "./api/auth.routes";
 import express from "express";
@@ -21,6 +23,9 @@ app.get("/health", (req, res) => {
   res.json({ mensaje: "El servidor está funcionando" });
   
 });
+
+// Documentación en http://localhost:3000/api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(especificacion));
 
 // Siempre va al final, después de las rutas
 app.use(manejarErrores);
