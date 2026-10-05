@@ -38,6 +38,8 @@ Para las opciones de consulta:
 * se valida el formato del id para devolver 400 en vez de un error 500.
 
 *Swagger se instalo para documentar todos los endpoints directamente en el proyecto, es el estandar para describir una API: que rutas tiene, que datos recibe, que responde y que errores y que errores puede dar 
+
+*$ref para reutilizar los esquemas Tarea y Error en vez de repetirlos, el candado (security: bearerAuth) indica qué endpoints requieren token.
 ## Uso de asistentes de IA
 (Una entrada por cada uso significativo. Ver abajo)
 me ayudo a crear el repositorio y conectarlo de manera precisa por que hace mucho no usaba git y tampoco github, cometi errores de codificacion y ortografia y me ayude con la IA claude para corregirlos, un ejemplo: escribí git log --online cuando en realidad era git log --oneline.
