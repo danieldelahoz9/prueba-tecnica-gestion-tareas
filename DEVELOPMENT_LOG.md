@@ -28,6 +28,14 @@ use async/await para la conexion y decidi conectar la base antes de abrir el ser
 ## Decisiones de arquitectura
 (Por qué elegiste MongoDB, por qué esas librerías, cómo organizaste las carpetas)
 
+En consultas y pruebas ejecutadas en postman 
+Para las opciones de consulta:
+
+*la consulta filtra por _id y por usuario, asi que la seguridad esta en la base de datos y no solo en un if, de esa manera se le puso un filtro mas a su seguridad de datos.
+
+*se revela 404 y no 403 para no revelar que la tarea existe. 
+
+* se valida el formato del id para devolver 400 en vez de un error 500.
 ## Uso de asistentes de IA
 (Una entrada por cada uso significativo. Ver abajo)
 me ayudo a crear el repositorio y conectarlo de manera precisa por que hace mucho no usaba git y tampoco github, cometi errores de codificacion y ortografia y me ayude con la IA claude para corregirlos, un ejemplo: escribí git log --online cuando en realidad era git log --oneline.
