@@ -36,9 +36,13 @@ Para las opciones de consulta:
 *se revela 404 y no 403 para no revelar que la tarea existe. 
 
 * se valida el formato del id para devolver 400 en vez de un error 500.
+
+*Swagger se instalo para documentar todos los endpoints directamente en el proyecto, es el estandar para describir una API: que rutas tiene, que datos recibe, que responde y que errores y que errores puede dar 
 ## Uso de asistentes de IA
 (Una entrada por cada uso significativo. Ver abajo)
 me ayudo a crear el repositorio y conectarlo de manera precisa por que hace mucho no usaba git y tampoco github, cometi errores de codificacion y ortografia y me ayude con la IA claude para corregirlos, un ejemplo: escribí git log --online cuando en realidad era git log --oneline.
+
+use claude para apoyarme en gran parte del proyecto o prueba tecnica ya que muy poco manejo node.js y typescript. en pocas palabras casi no manejo java y javascript, por ende esto fue de aprendizaje tambien, les dejare toda la conversacion en la documentacion.
 
 
 
