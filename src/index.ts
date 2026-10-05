@@ -1,3 +1,4 @@
+  import { manejarErrores } from "./api/error.middleware";
 import taskRoutes from "./api/task.routes";
 import authRoutes from "./api/auth.routes";
 import express from "express";
@@ -18,7 +19,11 @@ app.use("/tasks", taskRoutes);
 // Ruta de prueba para comprobar que el servidor funciona
 app.get("/health", (req, res) => {
   res.json({ mensaje: "El servidor está funcionando" });
+  
 });
+
+// Siempre va al final, después de las rutas
+app.use(manejarErrores);
 
 // Función que primero conecta la base de datos y luego enciende el servidor
 async function iniciarServidor() {
