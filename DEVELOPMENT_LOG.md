@@ -28,6 +28,8 @@ use async/await para la conexion y decidi conectar la base antes de abrir el ser
 ## Decisiones de arquitectura
 (Por qué elegiste MongoDB, por qué esas librerías, cómo organizaste las carpetas)
 
+elegí MongoDB porque ya lo tenía instalado y el plazo era corto; organicé en capas; usé Singleton para la configuración; el id del usuario sale del token; el login da el mismo mensaje para email inexistente y contraseña mala.
+
 En consultas y pruebas ejecutadas en postman 
 Para las opciones de consulta:
 
@@ -50,3 +52,5 @@ use claude para apoyarme en gran parte del proyecto o prueba tecnica ya que muy 
 
 ## Retos y soluciones
 (Errores que tuviste y cómo los resolviste)
+
+TypeScript 7 incompatible con ts-node-dev (instalé la 5); verbatimModuleSyntax; llaves sin cerrar; confundir pestañas de Postman; git init en carpeta equivocada; $ copiado en la terminal.
