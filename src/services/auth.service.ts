@@ -1,3 +1,4 @@
+import { ConflictError, AuthenticationError } from "../utils/errors";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
 import bcrypt from "bcrypt";
@@ -12,7 +13,7 @@ export async function registrarUsuario(
   // Primero busco si ya existe un usuario con ese email
   const usuarioExistente = await UserModel.findOne({ email: email });
   if (usuarioExistente) {
-    throw new Error("El email ya está registrado");
+       throw new ConflictError("El email ya está registrado");
   }
 
   // Encripto la contraseña, nunca se guarda en texto plano
@@ -35,13 +36,13 @@ export async function iniciarSesion(email: string, password: string) {
   // Busco al usuario por su email
   const usuario = await UserModel.findOne({ email: email });
   if (!usuario) {
-    throw new Error("Credenciales incorrectas");
+      throw new AuthenticationError("Credenciales incorrectas");
   }
 
   // Comparo la contraseña escrita con el hash guardado
   const passwordCorrecta = await bcrypt.compare(password, usuario.password);
   if (!passwordCorrecta) {
-    throw new Error("Credenciales incorrectas");
+     throw new AuthenticationError("Credenciales incorrectas");
   }
 
   // Creo el token con el id del usuario, válido por 1 hora
